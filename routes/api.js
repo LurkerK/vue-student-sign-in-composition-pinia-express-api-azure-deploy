@@ -9,8 +9,10 @@ router.get('/students', function(req, res, next) {
     // qurey database, get all rows from DB,
     // convert to JSON form
     // available in the then function
-    Student.findAll( { order: ['name'] } ).then(students => {
+    Student.findAll( { order: ['present', 'name'] } ).then( students => {
         return res.json(students)
+    }).catch( err => {
+        return next(err)
     })
 })
 
@@ -27,7 +29,7 @@ router.post('/students', function(req, res, next){
             return res.status(400).json(messages)
         } else {
             // some other error?
-            next(err)
+            return next(err)
         }
     })
 })
@@ -48,7 +50,7 @@ router.patch('/students/:id', function(req, res, next) {
       const rowsModified = result[0]  
       // if 1 row was changed, we found student and they were updated
       if (rowsModified === 1) {
-        return res.send('OK')
+        return res.send('Student Updated')
       }  
       // studentid that doesn't exist
       else {
@@ -66,7 +68,7 @@ router.patch('/students/:id', function(req, res, next) {
             return res.status(400).json(messages)
         } else {
             // some other error?  - can't connect to database
-            next(err)
+            return next(err)
         }
     })
 
